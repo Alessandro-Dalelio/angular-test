@@ -1,19 +1,33 @@
 import { Component } from '@angular/core';
 import { DUMMY_MOVIES } from '../../data/dummy-movies';
 import { ButtonComponent } from '../button/button.component';
+import { RouterLink } from '@angular/router';
 
 const randomIdx = Math.floor(Math.random() * DUMMY_MOVIES.length);
 
 @Component({
   selector: 'app-random-movie',
   standalone: true,
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, RouterLink],
   templateUrl: './random-movie.component.html',
   styleUrl: './random-movie.component.scss',
 })
 export class RandomMovieComponent {
   movie = DUMMY_MOVIES[randomIdx];
+  
+  /*intervalId : any;
 
+  ngOnInit(): void{
+    console.log('component inizializzato');
+    this.intervalId = setInterval(() => this.onGetRandomMovie(), 2000);
+  }
+
+  ngOnDestroy(): void {
+    console.log('componente distrutto');
+    clearInterval(this.intervalId);
+  }
+
+  */
   onGetRandomMovie() {
     const randomIdx = Math.floor(Math.random() * DUMMY_MOVIES.length);
 

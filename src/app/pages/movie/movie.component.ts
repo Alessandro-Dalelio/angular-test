@@ -2,6 +2,7 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { MovieService } from '../../services/movie.service';
 import { MovieAltPipe } from '../../pipes/movie-alt.pipe';
 import { MoviePosterPipe } from '../../pipes/movie-poster.pipe';
+import { Movie } from '../../models/movie.model';
 
 @Component({
   selector: 'app-movie',
@@ -10,12 +11,21 @@ import { MoviePosterPipe } from '../../pipes/movie-poster.pipe';
   templateUrl: './movie.component.html',
   styleUrl: './movie.component.scss',
 })
-export class MovieComponent {
+export class MovieComponent implements OnInit{
   @Input({ required: true }) movieId!: string;
-
+  movie!: Movie;
   movieService = inject(MovieService);
 
-  get movie() {
-    return this.movieService.getCurrentMovie(parseInt(this.movieId));
-  }
+  ngOnInit(): void {
+    this.movieService.getCurrentMovie(parseInt(this.movieId)).subscribe({
+      next: (movie) => {
+        if (!movie) return;
+        this.movie = movie;
+      },
+      error: (err) => {
+        console.error('Errore:', err);
+      },
+    });
+//this.movieService.getCurrentMovie(parseInt(this.movieId));
+}
 }

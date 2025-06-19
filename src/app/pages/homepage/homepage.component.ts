@@ -7,6 +7,7 @@ import { DUMMY_ACTORS } from '../../data/dummy-actors';
 import { Movie } from '../../models/movie.model';
 import { ActorService } from '../../services/actor.service';
 import { MovieService } from '../../services/movie.service';
+import { Actor } from '../../models/actor.model';
 
 @Component({
   selector: 'app-homepage',
@@ -17,10 +18,11 @@ import { MovieService } from '../../services/movie.service';
 })
 export class HomepageComponent implements OnInit {
   movies: Movie[] = [];
-  isFetching: boolean = false;
-  actors = DUMMY_ACTORS;
+  isFetching: boolean = true;
+  actors : Actor[] = [];
   private actorService = inject(ActorService);
   private movieService = inject(MovieService);
+  
   ngOnInit(): void {
     this.isFetching = true;
     this.movieService.getMovies().subscribe({
@@ -39,7 +41,22 @@ export class HomepageComponent implements OnInit {
         this.movies = [];
       },
     });
+    //this.movieService.getCurrentMovie(parseInt(this.movieId));
+    this.actorService.getActors().subscribe({
+    next: (actors) => {
+      if(!actors) return;
+      this.actors = actors.results.map((actor) => this.actorService.normalize(actor))
+      .sort((a,b) => b.popularity - a.popularity)
+      .slice(0,4);
+    },
+    error: (err) => {
+      console.log('Errore', err);
+      this.actors = [];
+    }
+    })
   }
+
+
 
   get bestFourMovies() {
     return [...this.movies]

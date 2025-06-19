@@ -35,3 +35,10 @@ export interface Actor {
   profile_path: string;
   known_for: ActorKnownFor[];
 }
+
+export interface ActorApiRest{
+  page: number;
+  results: Actor[];
+  total_pages: number;
+  total_results: number;
+}
